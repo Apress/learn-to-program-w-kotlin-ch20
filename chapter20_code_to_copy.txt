@@ -1,0 +1,158 @@
+Section 20.4:
+@Test
+fun readTest() {
+    Assert.assertEquals(1, read(loadSummary("1.png")))
+    Assert.assertEquals(2, read(loadSummary("2.png")))
+}
+
+fun read(summary: PictureSummary): Int {
+    if (summary.heightToWidth > 3f) return 1
+    if (summary.hasBottomBar) return 2
+    return -1
+}
+
+After Project Step 20.3:
+fun read(summary: PictureSummary): Int {
+    if (summary.heightToWidth > 3f) return 1
+    if (summary.hasBottomBar) return 2
+    if (summary.hasTopBar) {
+        if (summary.proportionBlackRight < .2) {
+            return 7
+        }
+        return 5
+    }
+    return -1
+}
+
+After Project Step 20.4:
+fun isInCentre(row: Int, column: Int): Boolean {
+    if (isInTopQuarter(row)) return false
+    if (isInBottomQuarter(row)) return false
+    if (isInLeftQuarter(column)) return false
+    if (isInRightQuarter(column)) return false
+    return true
+}
+
+After Project Step 20.6:
+if (regions.isInCentre(row, column)) centreBlack++
+
+Before Project Step 20.7:
+val centreRatio = centreBlack.toFloat() / regions.centrePixelCount().toFloat()
+hasCentreBlank = centreRatio < .1
+
+After Project Step 20.7:
+if (summary.hasCentreBlank) return 0
+
+---- Solutions to Project Steps ----
+Project Step 20.1:
+fun isInTopBar(row: Int): Boolean {
+    if (row < seventhHeight) return true
+    return false
+}
+
+@Test
+fun isInTopBarTest() {
+    val regions = Regions(70, 60)
+    for (i in 0..9) {
+        Assert.assertTrue(regions.isInTopBar(i))
+    }
+    for (i in 10..69) {
+        Assert.assertFalse(regions.isInTopBar(i))
+    }
+}
+
+Project Step 20.2:
+if (regions.isInTopBar(row)) topBarBlack++
+
+val topBarRatio = topBarBlack.toFloat() / regions.bottomBarArea().toFloat()
+hasTopBar = topBarRatio > .75
+
+@Test
+fun hasTopBarTest() {
+    Assert.assertTrue(summary("bwbw_h.png").hasTopBar)
+    Assert.assertTrue(summary("topbar.png").hasTopBar)
+    Assert.assertFalse(summary("wbwb_h.png").hasTopBar)
+    Assert.assertFalse(summary("notopbar.png").hasTopBar)
+}
+
+Project Step 20.3:
+@Test
+fun readTest() {
+    Assert.assertEquals(1, read(loadSummary("1.png")))
+    Assert.assertEquals(2, read(loadSummary("2.png")))
+    Assert.assertEquals(5, read(loadSummary("5.png")))
+    Assert.assertEquals(7, read(loadSummary("7.png")))
+}
+
+Project Step 20.4:
+fun isInTopQuarter(row: Int): Boolean {
+    return row < quarterHeight
+}
+
+fun isInBottomQuarter(row: Int): Boolean {
+    return row >= threeQuarterHeight
+}
+
+fun isInLeftQuarter(column: Int): Boolean {
+    return column < quarterWidth
+}
+
+@Test
+fun isInTopQuarterTest() {
+    val regions = Regions(40, 60)
+    for (i in 0..9) {
+        Assert.assertTrue(regions.isInTopQuarter(i))
+    }
+    for (i in 10..39) {
+        Assert.assertFalse(regions.isInTopQuarter(i))
+    }
+}
+
+@Test
+fun isInBottomQuarterTest() {
+    val regions = Regions(40, 60)
+    for (i in 0..29) {
+        Assert.assertFalse(regions.isInBottomQuarter(i))
+    }
+    for (i in 30..39) {
+        Assert.assertTrue(regions.isInBottomQuarter(i))
+    }
+}
+
+@Test
+fun isInLeftQuarterTest() {
+    val regions = Regions(40, 60)
+    for (i in 0..14) {
+        Assert.assertTrue(regions.isInLeftQuarter(i))
+    }
+    for (i in 15..59) {
+        Assert.assertFalse(regions.isInLeftQuarter(i))
+    }
+}
+
+
+Project Step 20.5:
+@Test
+fun isInCentreTest() {
+    val regions = Regions(40, 60)
+    for (i in 0..39) {
+        for (j in 0..59) {
+            if (i >= 10 && i < 30 && j >= 15 && j < 45) {
+                Assert.assertTrue(regions.isInCentre(i, j))
+            } else {
+                Assert.assertFalse(regions.isInCentre(i, j))
+            }
+        }
+    }
+}
+
+Project Step 20.6:
+fun centrePixelCount() : Int {
+    return columns * rows / 4
+}
+
+@Test
+fun centrePixelCountTest() {
+    val regions = Regions(40, 60)
+    Assert.assertEquals(600, regions.centrePixelCount())
+}
