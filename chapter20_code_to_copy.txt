@@ -25,7 +25,7 @@ fun read(summary: PictureSummary): Int {
 }
 
 After Project Step 20.4:
-fun isInCentre(row: Int, column: Int): Boolean {
+fun isInCenter(row: Int, column: Int): Boolean {
     if (isInTopQuarter(row)) return false
     if (isInBottomQuarter(row)) return false
     if (isInLeftQuarter(column)) return false
@@ -34,14 +34,14 @@ fun isInCentre(row: Int, column: Int): Boolean {
 }
 
 After Project Step 20.6:
-if (regions.isInCentre(row, column)) centreBlack++
+if (regions.isInCenter(row, column)) centerBlack++
 
 Before Project Step 20.7:
-val centreRatio = centreBlack.toFloat() / regions.centrePixelCount().toFloat()
-hasCentreBlank = centreRatio < .1
+val centerRatio = centerBlack.toFloat() / regions.centerPixelCount().toFloat()
+hasCenterBlank = centerRatio < .1
 
 After Project Step 20.7:
-if (summary.hasCentreBlank) return 0
+if (summary.hasCenterBlank) return 0
 
 ---- Solutions to Project Steps ----
 Project Step 20.1:
@@ -133,26 +133,26 @@ fun isInLeftQuarterTest() {
 
 Project Step 20.5:
 @Test
-fun isInCentreTest() {
+fun isInCenterTest() {
     val regions = Regions(40, 60)
     for (i in 0..39) {
         for (j in 0..59) {
             if (i >= 10 && i < 30 && j >= 15 && j < 45) {
-                Assert.assertTrue(regions.isInCentre(i, j))
+                Assert.assertTrue(regions.isInCenter(i, j))
             } else {
-                Assert.assertFalse(regions.isInCentre(i, j))
+                Assert.assertFalse(regions.isInCenter(i, j))
             }
         }
     }
 }
 
 Project Step 20.6:
-fun centrePixelCount() : Int {
+fun centerPixelCount() : Int {
     return columns * rows / 4
 }
 
 @Test
-fun centrePixelCountTest() {
+fun centerPixelCountTest() {
     val regions = Regions(40, 60)
-    Assert.assertEquals(600, regions.centrePixelCount())
+    Assert.assertEquals(600, regions.centerPixelCount())
 }
